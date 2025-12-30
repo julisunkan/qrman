@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QR Code Viewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>QR Code Viewer</h1>
+        <p style="text-align: center; color: #64748b; margin-bottom: 30px;">Upload any QR code to view its hidden details</p>
+        
+        <div style="background: #f1f5f9; padding: 30px; border-radius: 20px; text-align: center; border: 2px dashed #e2e8f0;">
+            <input type="file" id="qr-upload" accept="image/*" style="display: none;">
+            <button onclick="document.getElementById('qr-upload').click()" style="margin-bottom: 20px;">Choose Image</button>
+            <div id="preview-container" style="display: none; margin-top: 20px;">
+                <canvas id="qr-canvas" style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);"></canvas>
+            </div>
+        </div>
+
+        <div id="result-container" style="display: none; margin-top: 30px; background: white; padding: 25px; border-radius: 16px; border: 1px solid #e2e8f0; animation: popIn 0.5s ease;">
+            <h3 style="margin: 0 0 15px; color: var(--primary);">Decoded Result</h3>
+            <div id="qr-data" style="padding: 15px; background: #f8fafc; border-radius: 10px; font-family: monospace; word-break: break-all; font-size: 14px; border: 1px solid #e2e8f0;"></div>
+            <div id="vcard-details" style="display: none; margin-top: 20px; padding: 15px; background: #f0fdf4; border-radius: 10px; border: 1px solid #bbf7d0;">
+                <h4 style="margin: 0 0 10px; color: #166534;">vCard Detected</h4>
+                <div id="vcard-info" style="font-size: 13px; color: #166534; white-space: pre-wrap;"></div>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px; text-align: center;">
+            <a href="/" style="color: var(--primary); text-decoration: none; font-weight: 600;">← Back to Generator</a>
+        </div>
+    </div>
+
+    <script>
+        const upload = document.getElementById('qr-upload');
+        const canvas = document.getElementById('qr-canvas');
+        const ctx = canvas.getContext('2d');
+        const resultContainer = document.getElementById('result-container');
+        const dataDisplay = document.getElementById('qr-data');
+        const vcardDetails = document.getElementById('vcard-details');
+        const vcardInfo = document.getElementById('vcard-info');
+
+        upload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    document.getElementById('preview-container').style.display = 'block';
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const code = jsQR(imageData.data, imageData.width, imageData.height);
+
+                    resultContainer.style.display = 'block';
+                    if (code) {
+                        dataDisplay.textContent = code.data;
+                        dataDisplay.style.color = 'var(--text)';
+                        
+                        if (code.data.startsWith('BEGIN:VCARD')) {
+                            vcardDetails.style.display = 'block';
+                            vcardInfo.textContent = code.data;
+                        } else {
+                            vcardDetails.style.display = 'none';
+                        }
+                    } else {
+                        dataDisplay.textContent = "Could not detect a valid QR code in this image.";
+                        dataDisplay.style.color = "#ef4444";
+                        vcardDetails.style.display = 'none';
+                    }
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+    </script>
+</body>
+</html>

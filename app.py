@@ -134,6 +134,10 @@ def dashboard(code):
     conn.close()
     return render_template('dashboard.html', link=link, stats=stats)
 
+@app.route('/viewer')
+def viewer():
+    return render_template('viewer.html')
+
 if __name__ == '__main__':
     init_db()
     app.run(host='0.0.0.0', port=5000)
