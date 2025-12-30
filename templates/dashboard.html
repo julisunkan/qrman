@@ -42,7 +42,7 @@
 
         <div style="margin-top: 30px; background: #f8fafc; padding: 20px; border-radius: 16px;">
             <p style="margin: 0 0 10px; font-weight: 600; font-size: 14px; color: #64748b;">Embed HTML</p>
-            <textarea readonly style="width: 100%; height: 80px; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: monospace; font-size: 12px; resize: none; background: white;"><a href="{{ request.host_url.rstrip('/') }}/r/{{ link.code }}"><img src="{{ request.host_url.rstrip('/') }}/static/qr_codes/{{ link.code }}.png" width="150" alt="Scan QR Code"></a></textarea>
+            <textarea readonly style="width: 100%; height: 80px; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: monospace; font-size: 12px; resize: none; background: white;"><a href="{{ request.host_url.rstrip('/') }}/r/{{ encoded_code }}"><img src="{{ request.host_url.rstrip('/') }}/static/qr_codes/{{ link.code }}.png" width="150" alt="Scan QR Code"></a></textarea>
         </div>
 
         <div class="charts">

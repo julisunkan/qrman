@@ -1,6 +1,7 @@
 import os
 import sqlite3
-from flask import Flask, redirect, url_for, request, render_template, send_from_directory
+import base64
+from flask import Flask, redirect, url_for, request, render_template, send_from_directory, Response
 import uuid
 from datetime import datetime, timedelta
 import qr_utils
@@ -8,6 +9,13 @@ from user_agents import parse
 
 app = Flask(__name__)
 DB_FILE = 'database.db'
+
+def encrypt_code(code):
+    return base64.urlsafe_b64encode(code.encode()).decode().rstrip('=')
+
+def decrypt_code(encoded):
+    padding = '=' * (4 - len(encoded) % 4)
+    return base64.urlsafe_b64decode((encoded + padding).encode()).decode()
 
 def get_db_connection():
     conn = sqlite3.connect(DB_FILE)
@@ -42,7 +50,6 @@ def generate():
         emails = request.form.getlist('email[]')
         org = request.form.get('org', '')
         
-        # Simple vCard 3.0 format with multiple entries
         vcard_lines = [
             "BEGIN:VCARD",
             "VERSION:3.0",
@@ -75,17 +82,17 @@ def generate():
     conn.commit()
     conn.close()
 
-    # If it's a vCard, we'll save the .vcf file and provide a download option
+    encrypted_code = encrypt_code(code)
+    domain = request.host_url.rstrip('/')
+    
     if qr_type == 'vcard':
         vcf_filename = f"{code}.vcf"
         vcf_path = os.path.join('static', 'qr_codes', vcf_filename)
         with open(vcf_path, 'w') as f:
             f.write(target_url)
-        return redirect(url_for('dashboard', code=code, is_vcard='1'))
+        return redirect(url_for('dashboard', encoded_code=encrypted_code, is_vcard='1'))
 
-    # Generate QR codes for non-vCard types (e.g., URL)
-    domain = request.host_url.rstrip('/')
-    redirect_url = f"{domain}/r/{code}"
+    redirect_url = f"{domain}/r/{encrypted_code}"
     
     logo_path = None
     if logo and logo.filename:
@@ -94,10 +101,15 @@ def generate():
 
     qr_utils.generate_all_formats(code, redirect_url, fg_color, bg_color, logo_path)
     
-    return redirect(url_for('dashboard', code=code))
+    return redirect(url_for('dashboard', encoded_code=encrypted_code))
 
-@app.route('/dashboard/<code>')
-def dashboard(code):
+@app.route('/dashboard/<encoded_code>')
+def dashboard(encoded_code):
+    try:
+        code = decrypt_code(encoded_code)
+    except:
+        return "Invalid Code", 400
+        
     is_vcard = request.args.get('is_vcard') == '1'
     conn = get_db_connection()
     link = conn.execute('SELECT * FROM links WHERE code = ?', (code,)).fetchone()
@@ -106,7 +118,6 @@ def dashboard(code):
         
     scans = conn.execute('SELECT * FROM scans WHERE link_code = ? ORDER BY timestamp DESC', (code,)).fetchall()
     
-    # Simple aggregation for charts
     stats = {
         'total': link['total_scans'],
         'countries': {},
@@ -121,10 +132,15 @@ def dashboard(code):
         stats['daily'][day] = stats['daily'].get(day, 0) + 1
     
     conn.close()
-    return render_template('dashboard.html', link=link, stats=stats, is_vcard=is_vcard)
+    return render_template('dashboard.html', link=link, stats=stats, is_vcard=is_vcard, encoded_code=encoded_code)
 
-@app.route('/r/<code>')
-def redirect_to_url(code):
+@app.route('/r/<encoded_code>')
+def redirect_to_url(encoded_code):
+    try:
+        code = decrypt_code(encoded_code)
+    except:
+        return "Invalid Code", 400
+        
     conn = get_db_connection()
     link = conn.execute('SELECT * FROM links WHERE code = ?', (code,)).fetchone()
     
@@ -134,7 +150,6 @@ def redirect_to_url(code):
     if link['expires_at'] and datetime.fromisoformat(link['expires_at']) < datetime.now():
         return render_template('expired.html', link=link)
 
-    # Log scan
     ip = request.headers.get('X-Forwarded-For', request.remote_addr).split(',')[0].strip()
     ua_string = request.headers.get('User-Agent')
     ua = parse(ua_string)
@@ -151,9 +166,7 @@ def redirect_to_url(code):
     conn.commit()
     conn.close()
 
-    # If target_url starts with BEGIN:VCARD, it's a vCard
     if link['target_url'].startswith('BEGIN:VCARD'):
-        from flask import Response
         return Response(link['target_url'], mimetype='text/vcard', headers={'Content-Disposition': f'attachment; filename={code}.vcf'})
 
     return redirect(link['target_url'])
