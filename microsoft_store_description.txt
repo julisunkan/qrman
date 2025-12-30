@@ -1,0 +1,24 @@
+App Name: QR Pro - Professional QR Code Studio
+
+Description
+Unleash the Power of QR Codes with QR Pro.
+
+QR Pro is the ultimate all-in-one suite for creating, tracking, and managing high-performance QR codes. Designed for both business and personal use, it combines advanced customization with deep analytics to help you connect with your audience like never before.
+
+Key Features:
+* Generate with Precision: Create beautiful QR codes for URLs and professional Digital Contact Cards (vCards) in seconds.
+* Branding & Style: Stand out from the crowd! Customize foreground and background colors, and embed your own high-resolution PNG logo directly into the code.
+* Dynamic Animation: Go beyond static images. Generate eye-catching Animated GIF QR codes that demand attention on digital screens.
+* Deep Analytics Dashboard: Know your audience. Track total scans, identify user devices (Mobile vs. Desktop), and monitor scan activity over time with real-time charts.
+* Advanced QR Viewer: Decipher any QR code instantly. Our smart scanner handles low-light and sideways photos, giving you immediate access to hidden data or clickable links.
+* Digital Business Cards: Simplify networking. Generate vCards that users can scan to save your contact info directly to their phones.
+* Secure & Private: Our "Secure Link" technology ensures your tracking URLs stay professional and protected.
+* Privacy First: Built-in expiration dates allow you to create time-sensitive codes that automatically deactivate when you choose.
+
+Whether you're a marketing professional looking for scan statistics or a networking pro sharing contact details, QR Pro is the only QR tool you'll ever need.
+
+Search Keywords
+QR Code Generator, QR Scanner, QR Tracker, vCard Creator, Digital Business Card, Custom QR Code, QR Analytics, Barcode Reader, Professional QR, Animated QR, Marketing Tools, URL Shortener, Scan Tracker, Business Networking, Privacy QR.
+
+Short Description (For Search Results)
+The ultimate professional QR suite: Generate customizable codes with logos, track real-time scan analytics, and create digital vCard business cards in seconds.
