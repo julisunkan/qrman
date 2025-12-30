@@ -78,7 +78,24 @@
                         
                         if (code.data.startsWith('BEGIN:VCARD')) {
                             vcardDetails.style.display = 'block';
-                            vcardInfo.textContent = code.data;
+                            
+                            // Basic vCard parsing
+                            const lines = code.data.split('\n');
+                            let formattedInfo = '';
+                            lines.forEach(line => {
+                                if (line.startsWith('FN:')) formattedInfo += '<strong>Name:</strong> ' + line.substring(3).trim() + '<br>';
+                                if (line.startsWith('TEL')) {
+                                    const parts = line.split(':');
+                                    if (parts.length > 1) formattedInfo += '<strong>Phone:</strong> ' + parts[1].trim() + '<br>';
+                                }
+                                if (line.startsWith('EMAIL')) {
+                                    const parts = line.split(':');
+                                    if (parts.length > 1) formattedInfo += '<strong>Email:</strong> ' + parts[1].trim() + '<br>';
+                                }
+                                if (line.startsWith('ORG:')) formattedInfo += '<strong>Org:</strong> ' + line.substring(4).trim() + '<br>';
+                            });
+                            
+                            vcardInfo.innerHTML = formattedInfo || 'Raw vCard data detected';
                         } else {
                             vcardDetails.style.display = 'none';
                         }
