@@ -123,6 +123,41 @@ def dashboard(code):
     conn.close()
     return render_template('dashboard.html', link=link, stats=stats, is_vcard=is_vcard)
 
+@app.route('/r/<code>')
+def redirect_to_url(code):
+    conn = get_db_connection()
+    link = conn.execute('SELECT * FROM links WHERE code = ?', (code,)).fetchone()
+    
+    if not link:
+        return "Not Found", 404
+
+    if link['expires_at'] and datetime.fromisoformat(link['expires_at']) < datetime.now():
+        return render_template('expired.html', link=link)
+
+    # Log scan
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr).split(',')[0].strip()
+    ua_string = request.headers.get('User-Agent')
+    ua = parse(ua_string)
+    
+    device = "Desktop"
+    if ua.is_mobile: device = "Mobile"
+    elif ua.is_tablet: device = "Tablet"
+    
+    country = qr_utils.get_country(ip)
+
+    conn.execute('INSERT INTO scans (link_code, country, device, ip) VALUES (?, ?, ?, ?)',
+                 (code, country, device, ip))
+    conn.execute('UPDATE links SET total_scans = total_scans + 1 WHERE code = ?', (code,))
+    conn.commit()
+    conn.close()
+
+    # If target_url starts with BEGIN:VCARD, it's a vCard
+    if link['target_url'].startswith('BEGIN:VCARD'):
+        from flask import Response
+        return Response(link['target_url'], mimetype='text/vcard', headers={'Content-Disposition': f'attachment; filename={code}.vcf'})
+
+    return redirect(link['target_url'])
+
 @app.route('/viewer')
 def viewer():
     return render_template('viewer.html')
