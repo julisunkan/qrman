@@ -56,7 +56,20 @@
                     ctx.drawImage(img, 0, 0);
                     
                     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                    const code = jsQR(imageData.data, imageData.width, imageData.height);
+                    
+                    // Try to detect QR code
+                    let code = jsQR(imageData.data, imageData.width, imageData.height);
+                    
+                    // If not found, try to resize the image slightly (some scanners perform better at specific scales)
+                    if (!code) {
+                        const tempCanvas = document.createElement('canvas');
+                        const tempCtx = tempCanvas.getContext('2d');
+                        tempCanvas.width = 1000; // standardizing size
+                        tempCanvas.height = (img.height / img.width) * 1000;
+                        tempCtx.drawImage(img, 0, 0, tempCanvas.width, tempCanvas.height);
+                        const tempImageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+                        code = jsQR(tempImageData.data, tempImageData.width, tempImageData.height);
+                    }
 
                     resultContainer.style.display = 'block';
                     if (code) {
