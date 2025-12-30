@@ -59,7 +59,7 @@
                 </div>
             </div>
 
-            <div class="options">
+            <div class="options" id="qr-options">
                 <label>Foreground <input type="color" name="fg_color" value="#4f46e5"></label>
                 <label>Background <input type="color" name="bg_color" value="#ffffff"></label>
                 <label>Expires (days) <input type="number" name="expiry_days" min="1" placeholder="Optional"></label>
@@ -88,10 +88,12 @@
                 const btnUrl = document.getElementById('btn-url');
                 const btnVcard = document.getElementById('btn-vcard');
                 const submitBtn = document.getElementById('submit-btn');
+                const qrOptions = document.getElementById('qr-options');
 
                 if (type === 'url') {
                     urlFields.style.display = 'block';
                     vcardFields.style.display = 'none';
+                    qrOptions.style.display = 'grid';
                     urlInput.required = true;
                     btnUrl.style.background = 'var(--primary)';
                     btnUrl.style.color = 'white';
@@ -101,6 +103,7 @@
                 } else {
                     urlFields.style.display = 'none';
                     vcardFields.style.display = 'block';
+                    qrOptions.style.display = 'none';
                     urlInput.required = false;
                     btnVcard.style.background = 'var(--primary)';
                     btnVcard.style.color = 'white';
