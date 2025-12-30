@@ -5,9 +5,12 @@ import os
 import geoip2.database
 
 def get_country(ip):
-    # This requires a GeoLite2-Country.mmdb file which isn't provided.
-    # We fallback to "Unknown" as per requirements.
-    return "Unknown"
+    try:
+        # Fallback to 'Unknown' as the .mmdb database file is not provided in the environment
+        # and requires manual download from MaxMind.
+        return "Unknown"
+    except Exception:
+        return "Unknown"
 
 def generate_all_formats(code, url, fg, bg, logo_path=None):
     qr_dir = os.path.join('static', 'qr_codes')

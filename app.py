@@ -166,8 +166,14 @@ def redirect_to_url(encoded_code):
     conn.commit()
     conn.close()
 
+    # If target_url starts with BEGIN:VCARD, it's a vCard download
     if link['target_url'].startswith('BEGIN:VCARD'):
-        return Response(link['target_url'], mimetype='text/vcard', headers={'Content-Disposition': f'attachment; filename={code}.vcf'})
+        # Log the scan then serve the file
+        return Response(
+            link['target_url'],
+            mimetype='text/vcard',
+            headers={'Content-Disposition': f'attachment; filename={code}.vcf'}
+        )
 
     return redirect(link['target_url'])
 
