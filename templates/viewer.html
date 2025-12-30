@@ -100,7 +100,7 @@
                     resultContainer.style.display = 'block';
                     if (code) {
                         if (code.data.startsWith('http://') || code.data.startsWith('https://')) {
-                            dataDisplay.innerHTML = `<a href="${code.data}" target="_blank" class="button" style="text-decoration: none; display: inline-block; width: auto; background: linear-gradient(135deg, #4f46e5, #8b5cf6); padding: 12px 25px; color: white; border-radius: 12px; font-weight: 600; margin-top: 5px;">Visit Link</a><div style="margin-top: 10px; font-size: 11px; color: #94a3b8; word-break: break-all;">${code.data}</div>`;
+                            dataDisplay.innerHTML = `<a href="${code.data}" target="_blank" class="button" style="text-decoration: none; display: inline-block; width: auto; background: linear-gradient(135deg, #4f46e5, #8b5cf6); padding: 12px 25px; color: white; border-radius: 12px; font-weight: 600; margin-top: 5px;">Visit Link</a>`;
                         } else {
                             dataDisplay.textContent = code.data;
                         }
