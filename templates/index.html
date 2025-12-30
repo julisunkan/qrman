@@ -26,8 +26,18 @@
             <div id="vcard-fields" class="input-group" style="display: none;">
                 <input type="text" name="first_name" placeholder="First Name">
                 <input type="text" name="last_name" placeholder="Last Name">
-                <input type="tel" name="phone" placeholder="Phone Number">
-                <input type="email" name="email" placeholder="Email Address">
+                <div id="phone-container" style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; gap: 8px;">
+                        <input type="tel" name="phone[]" placeholder="Phone Number" style="flex: 1;">
+                        <button type="button" onclick="addField('phone-container', 'phone[]', 'tel', 'Phone Number')" style="padding: 10px; width: 44px;">+</button>
+                    </div>
+                </div>
+                <div id="email-container" style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; gap: 8px;">
+                        <input type="email" name="email[]" placeholder="Email Address" style="flex: 1;">
+                        <button type="button" onclick="addField('email-container', 'email[]', 'email', 'Email Address')" style="padding: 10px; width: 44px;">+</button>
+                    </div>
+                </div>
                 <input type="text" name="org" placeholder="Organization">
             </div>
 
@@ -37,10 +47,22 @@
                 <label>Expires (days) <input type="number" name="expiry_days" min="1" placeholder="Optional"></label>
                 <label>Custom Logo <input type="file" name="logo" accept="image/png"></label>
             </div>
-            <button type="submit">Generate Magic QR</button>
+            <button type="submit" id="submit-btn">Generate Magic QR</button>
         </form>
 
         <script>
+            function addField(containerId, name, type, placeholder) {
+                const container = document.getElementById(containerId);
+                const div = document.createElement('div');
+                div.style.display = 'flex';
+                div.style.gap = '8px';
+                div.innerHTML = `
+                    <input type="${type}" name="${name}" placeholder="${placeholder}" style="flex: 1;">
+                    <button type="button" onclick="this.parentElement.remove()" style="padding: 10px; width: 44px; background: #ef4444;">-</button>
+                `;
+                container.appendChild(div);
+            }
+
             function toggleType(type) {
                 document.getElementById('qr-type').value = type;
                 const urlFields = document.getElementById('url-fields');
@@ -48,6 +70,7 @@
                 const urlInput = document.getElementById('url-input');
                 const btnUrl = document.getElementById('btn-url');
                 const btnVcard = document.getElementById('btn-vcard');
+                const submitBtn = document.getElementById('submit-btn');
 
                 if (type === 'url') {
                     urlFields.style.display = 'block';
@@ -57,6 +80,7 @@
                     btnUrl.style.color = 'white';
                     btnVcard.style.background = '#f1f5f9';
                     btnVcard.style.color = 'var(--text)';
+                    submitBtn.textContent = 'Generate Magic QR';
                 } else {
                     urlFields.style.display = 'none';
                     vcardFields.style.display = 'block';
@@ -65,6 +89,7 @@
                     btnVcard.style.color = 'white';
                     btnUrl.style.background = '#f1f5f9';
                     btnUrl.style.color = 'var(--text)';
+                    submitBtn.textContent = 'Generate vCard';
                 }
             }
         </script>

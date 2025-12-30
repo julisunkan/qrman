@@ -38,11 +38,29 @@ def generate():
     if qr_type == 'vcard':
         fn = request.form.get('first_name', '')
         ln = request.form.get('last_name', '')
-        tel = request.form.get('phone', '')
-        email = request.form.get('email', '')
+        phones = request.form.getlist('phone[]')
+        emails = request.form.getlist('email[]')
         org = request.form.get('org', '')
-        # Simple vCard 3.0 format
-        target_url = f"BEGIN:VCARD\nVERSION:3.0\nN:{ln};{fn};;;\nFN:{fn} {ln}\nORG:{org}\nTEL;TYPE=CELL:{tel}\nEMAIL:{email}\nEND:VCARD"
+        
+        # Simple vCard 3.0 format with multiple entries
+        vcard_lines = [
+            "BEGIN:VCARD",
+            "VERSION:3.0",
+            f"N:{ln};{fn};;;",
+            f"FN:{fn} {ln}",
+            f"ORG:{org}"
+        ]
+        
+        for phone in phones:
+            if phone.strip():
+                vcard_lines.append(f"TEL;TYPE=CELL:{phone.strip()}")
+        
+        for email in emails:
+            if email.strip():
+                vcard_lines.append(f"EMAIL:{email.strip()}")
+                
+        vcard_lines.append("END:VCARD")
+        target_url = "\n".join(vcard_lines)
     else:
         target_url = request.form.get('url')
 
