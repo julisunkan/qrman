@@ -57,10 +57,16 @@ def generate():
     conn.commit()
     conn.close()
 
-    # Generate QR codes
+    # If it's a vCard, we'll save the .vcf file and provide a download option
+    if qr_type == 'vcard':
+        vcf_filename = f"{code}.vcf"
+        vcf_path = os.path.join('static', 'qr_codes', vcf_filename)
+        with open(vcf_path, 'w') as f:
+            f.write(target_url)
+        return redirect(url_for('dashboard', code=code, is_vcard='1'))
+
+    # Generate QR codes for non-vCard types (e.g., URL)
     domain = request.host_url.rstrip('/')
-    # If it's a vCard, we might want to link directly or use the redirector
-    # Using the redirector allows tracking, but the mobile device must handle the text as a vCard after redirect
     redirect_url = f"{domain}/r/{code}"
     
     logo_path = None
@@ -72,44 +78,9 @@ def generate():
     
     return redirect(url_for('dashboard', code=code))
 
-@app.route('/r/<code>')
-def redirect_to_url(code):
-    conn = get_db_connection()
-    link = conn.execute('SELECT * FROM links WHERE code = ?', (code,)).fetchone()
-    
-    if not link:
-        return "Not Found", 404
-
-    if link['expires_at'] and datetime.fromisoformat(link['expires_at']) < datetime.now():
-        return render_template('expired.html', link=link)
-
-    # Log scan
-    ip = request.headers.get('X-Forwarded-For', request.remote_addr).split(',')[0].strip()
-    ua_string = request.headers.get('User-Agent')
-    ua = parse(ua_string)
-    
-    device = "Desktop"
-    if ua.is_mobile: device = "Mobile"
-    elif ua.is_tablet: device = "Tablet"
-    
-    country = qr_utils.get_country(ip)
-
-    conn.execute('INSERT INTO scans (link_code, country, device, ip) VALUES (?, ?, ?, ?)',
-                 (code, country, device, ip))
-    conn.execute('UPDATE links SET total_scans = total_scans + 1 WHERE code = ?', (code,))
-    conn.commit()
-    conn.close()
-
-    # If target_url starts with BEGIN:VCARD, it's a vCard
-    if link['target_url'].startswith('BEGIN:VCARD'):
-        # For vCards, we return the text content with correct MIME type so phones pick it up
-        from flask import Response
-        return Response(link['target_url'], mimetype='text/vcard', headers={'Content-Disposition': f'attachment; filename={code}.vcf'})
-
-    return redirect(link['target_url'])
-
 @app.route('/dashboard/<code>')
 def dashboard(code):
+    is_vcard = request.args.get('is_vcard') == '1'
     conn = get_db_connection()
     link = conn.execute('SELECT * FROM links WHERE code = ?', (code,)).fetchone()
     if not link:
@@ -132,7 +103,7 @@ def dashboard(code):
         stats['daily'][day] = stats['daily'].get(day, 0) + 1
     
     conn.close()
-    return render_template('dashboard.html', link=link, stats=stats)
+    return render_template('dashboard.html', link=link, stats=stats, is_vcard=is_vcard)
 
 @app.route('/viewer')
 def viewer():

@@ -10,12 +10,23 @@
     <div class="container">
         <h1>QR Dashboard</h1>
         <div class="qr-preview">
-            <img src="/static/qr_codes/{{ link.code }}.png" width="200" style="border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);">
-            <div class="downloads">
-                <a href="/static/qr_codes/{{ link.code }}.png" download>PNG</a>
-                <a href="/static/qr_codes/{{ link.code }}.svg" download>SVG</a>
-                <a href="/static/qr_codes/{{ link.code }}.gif" download>GIF</a>
-            </div>
+            {% if is_vcard %}
+                <div style="background: #f1f5f9; padding: 40px; border-radius: 20px; text-align: center; border: 2px dashed #e2e8f0; margin-bottom: 20px;">
+                    <div style="font-size: 48px; margin-bottom: 15px;">📇</div>
+                    <h2 style="margin: 0; color: var(--primary);">vCard Ready</h2>
+                    <p style="color: #64748b; font-size: 14px; margin-top: 5px;">Your digital contact file has been generated.</p>
+                </div>
+                <div class="downloads">
+                    <a href="/static/qr_codes/{{ link.code }}.vcf" download style="background: var(--primary); padding: 15px 30px; font-size: 16px;">Download .VCF File</a>
+                </div>
+            {% else %}
+                <img src="/static/qr_codes/{{ link.code }}.png" width="200" style="border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);">
+                <div class="downloads">
+                    <a href="/static/qr_codes/{{ link.code }}.png" download>PNG</a>
+                    <a href="/static/qr_codes/{{ link.code }}.svg" download>SVG</a>
+                    <a href="/static/qr_codes/{{ link.code }}.gif" download>GIF</a>
+                </div>
+            {% endif %}
         </div>
 
         <div class="stats">
