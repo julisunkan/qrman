@@ -34,6 +34,10 @@ def generate_all_formats(code, url, fg, bg, logo_path=None):
 
     # GIF (Animated)
     frames = []
+    width, height = img_png.size
+    logo_size = width // 4
+    pos = ((width - logo_size) // 2, (height - logo_size) // 2)
+    
     for i in range(10):
         # Subtle color shift for animation
         frame = qr.make_image(fill_color=fg, back_color=bg).convert('RGB')
