@@ -24,21 +24,39 @@
             </div>
 
             <div id="vcard-fields" class="input-group" style="display: none;">
-                <input type="text" name="first_name" placeholder="First Name">
-                <input type="text" name="last_name" placeholder="Last Name">
-                <div id="phone-container" style="display: flex; flex-direction: column; gap: 8px;">
-                    <div style="display: flex; gap: 8px;">
-                        <input type="tel" name="phone[]" placeholder="Phone Number" style="flex: 1;">
-                        <button type="button" onclick="addField('phone-container', 'phone[]', 'tel', 'Phone Number')" style="padding: 10px; width: 44px;">+</button>
+                <div style="grid-column: span 1;">
+                    <span class="field-section-label">Identity</span>
+                    <input type="text" name="first_name" placeholder="First Name">
+                </div>
+                <div style="grid-column: span 1;">
+                    <span class="field-section-label">&nbsp;</span>
+                    <input type="text" name="last_name" placeholder="Last Name">
+                </div>
+                
+                <div class="field-section">
+                    <span class="field-section-label">Contact Numbers</span>
+                    <div id="phone-container" style="display: flex; flex-direction: column; gap: 8px;">
+                        <div class="dynamic-input-group">
+                            <input type="tel" name="phone[]" placeholder="Mobile or Work Number">
+                            <button type="button" class="add-btn" onclick="addField('phone-container', 'phone[]', 'tel', 'Additional Number')">+</button>
+                        </div>
                     </div>
                 </div>
-                <div id="email-container" style="display: flex; flex-direction: column; gap: 8px;">
-                    <div style="display: flex; gap: 8px;">
-                        <input type="email" name="email[]" placeholder="Email Address" style="flex: 1;">
-                        <button type="button" onclick="addField('email-container', 'email[]', 'email', 'Email Address')" style="padding: 10px; width: 44px;">+</button>
+
+                <div class="field-section">
+                    <span class="field-section-label">Email Addresses</span>
+                    <div id="email-container" style="display: flex; flex-direction: column; gap: 8px;">
+                        <div class="dynamic-input-group">
+                            <input type="email" name="email[]" placeholder="Primary Email">
+                            <button type="button" class="add-btn" onclick="addField('email-container', 'email[]', 'email', 'Additional Email')">+</button>
+                        </div>
                     </div>
                 </div>
-                <input type="text" name="org" placeholder="Organization">
+
+                <div class="field-section">
+                    <span class="field-section-label">Professional Info</span>
+                    <input type="text" name="org" placeholder="Company / Organization Name">
+                </div>
             </div>
 
             <div class="options">
@@ -54,11 +72,10 @@
             function addField(containerId, name, type, placeholder) {
                 const container = document.getElementById(containerId);
                 const div = document.createElement('div');
-                div.style.display = 'flex';
-                div.style.gap = '8px';
+                div.className = 'dynamic-input-group';
                 div.innerHTML = `
-                    <input type="${type}" name="${name}" placeholder="${placeholder}" style="flex: 1;">
-                    <button type="button" onclick="this.parentElement.remove()" style="padding: 10px; width: 44px; background: #ef4444;">-</button>
+                    <input type="${type}" name="${name}" placeholder="${placeholder}">
+                    <button type="button" class="remove-btn" onclick="this.parentElement.remove()">-</button>
                 `;
                 container.appendChild(div);
             }

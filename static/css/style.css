@@ -202,31 +202,89 @@ input[type="color"] {
 #vcard-fields {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    background: #f1f5f9;
-    padding: 20px;
-    border-radius: 16px;
+    gap: 20px;
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 20px;
     border: 1px solid #e2e8f0;
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+}
+
+.field-section {
+    grid-column: span 2;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.field-section-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+}
+
+.dynamic-input-group {
+    display: flex;
+    gap: 10px;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
 }
 
 #vcard-fields input {
     width: 100%;
     box-sizing: border-box;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
 }
 
-#vcard-fields input[name="org"], 
-#vcard-fields input[name="email"] {
-    grid-column: span 2;
+#vcard-fields input:focus {
+    background: #ffffff;
+    border-color: var(--primary);
 }
 
-@media (max-width: 480px) {
-    #vcard-fields {
-        grid-template-columns: 1fr;
-    }
-    #vcard-fields input[name="org"], 
-    #vcard-fields input[name="email"] {
-        grid-column: span 1;
-    }
+.add-btn {
+    background: #f1f5f9;
+    color: var(--primary);
+    border: 1px solid #e2e8f0;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.add-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.remove-btn {
+    background: #fee2e2;
+    color: #ef4444;
+    border: 1px solid #fecaca;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.remove-btn:hover {
+    background: #ef4444;
+    color: white;
 }
 .features-mini {
     margin-top: 40px;
