@@ -60,15 +60,33 @@
                     // Try to detect QR code
                     let code = jsQR(imageData.data, imageData.width, imageData.height);
                     
-                    // If not found, try to resize the image slightly (some scanners perform better at specific scales)
+                    // If not found, try to resize the image at multiple scales and grayscale
                     if (!code) {
-                        const tempCanvas = document.createElement('canvas');
-                        const tempCtx = tempCanvas.getContext('2d');
-                        tempCanvas.width = 1000; // standardizing size
-                        tempCanvas.height = (img.height / img.width) * 1000;
-                        tempCtx.drawImage(img, 0, 0, tempCanvas.width, tempCanvas.height);
-                        const tempImageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
-                        code = jsQR(tempImageData.data, tempImageData.width, tempImageData.height);
+                        const scales = [1000, 1500, 800, 600];
+                        for (let scale of scales) {
+                            const tempCanvas = document.createElement('canvas');
+                            const tempCtx = tempCanvas.getContext('2d');
+                            tempCanvas.width = scale;
+                            tempCanvas.height = (img.height / img.width) * scale;
+                            
+                            // Apply grayscale and contrast + rotation attempts
+                            tempCtx.filter = 'grayscale(100%) contrast(150%) brightness(110%)';
+                            tempCtx.drawImage(img, 0, 0, tempCanvas.width, tempCanvas.height);
+                            
+                            const tempImageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+                            code = jsQR(tempImageData.data, tempImageData.width, tempImageData.height);
+                            
+                            if (!code) {
+                                // Try rotation
+                                tempCtx.translate(tempCanvas.width / 2, tempCanvas.height / 2);
+                                tempCtx.rotate(Math.PI / 2);
+                                tempCtx.drawImage(img, -tempCanvas.height / 2, -tempCanvas.width / 2, tempCanvas.height, tempCanvas.width);
+                                const rotImageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+                                code = jsQR(rotImageData.data, rotImageData.width, rotImageData.height);
+                            }
+                            
+                            if (code) break;
+                        }
                     }
 
                     resultContainer.style.display = 'block';
