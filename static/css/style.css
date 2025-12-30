@@ -223,4 +223,5 @@ input[type="color"] {
     38%, 58% { transform: translateY(-100%); opacity: 1; }
     66%, 96% { transform: translateY(-200%); opacity: 0; }
     71%, 91% { transform: translateY(-200%); opacity: 1; }
-}
+}.charts { display: flex; flex-direction: column; gap: 30px; margin-top: 30px; }
+canvas { max-height: 300px; width: 100% !important; }
