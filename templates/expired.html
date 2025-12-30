@@ -6,7 +6,15 @@
 </head>
 <body>
     <div class="container">
-        <h1>Expired</h1>
+        <h1>QR Pro</h1>
+        
+        <nav class="main-nav">
+            <button onclick="window.location.href='/'">Generator</button>
+            <button onclick="window.location.href='/viewer'">QR Viewer</button>
+            <button onclick="window.location.href='/vcard-viewer'">vCard Viewer</button>
+        </nav>
+
+        <h2 style="text-align: center; color: var(--accent-red); margin-top: 0;">Expired</h2>
         <p>This QR code link has expired on {{ link.expires_at }}.</p>
         <a href="/">Create New QR</a>
     </div>

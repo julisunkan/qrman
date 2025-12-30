@@ -7,7 +7,15 @@
 </head>
 <body>
     <div class="container">
-        <h1>vCard Viewer</h1>
+        <h1>QR Pro</h1>
+        
+        <nav class="main-nav">
+            <button onclick="window.location.href='/'">Generator</button>
+            <button onclick="window.location.href='/viewer'">QR Viewer</button>
+            <button onclick="window.location.href='/vcard-viewer'" class="active">vCard Viewer</button>
+        </nav>
+
+        <h2 style="text-align: center; color: var(--primary); margin-top: 0;">vCard Viewer</h2>
         <p style="text-align: center; color: #64748b; margin-bottom: 30px;">Upload a .vcf file to view contact details</p>
         
         <div style="background: #f1f5f9; padding: 30px; border-radius: 20px; text-align: center; border: 2px dashed #e2e8f0;">

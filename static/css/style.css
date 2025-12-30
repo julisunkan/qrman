@@ -43,6 +43,43 @@ body {
     animation: fadeInSlide 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Navigation */
+.main-nav {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e2e8f0;
+    flex-wrap: wrap;
+}
+
+.main-nav button {
+    padding: 10px 15px;
+    font-size: 14px;
+    background: #f1f5f9;
+    color: var(--text);
+    box-shadow: none;
+}
+
+.main-nav button.active {
+    background: var(--primary);
+    color: white;
+}
+
+.type-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    background: #f1f5f9;
+    color: var(--text);
+    box-shadow: none;
+}
+
+.type-btn.active {
+    background: var(--primary);
+    color: white;
+}
+
 h1 {
     text-align: center;
     font-size: 2.5rem;

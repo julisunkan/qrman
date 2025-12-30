@@ -16,13 +16,17 @@
 </head>
 <body>
     <div class="container">
-        <h1>Custom QR Generator</h1>
+        <h1>QR Pro</h1>
         
+        <nav class="main-nav">
+            <button onclick="window.location.href='/'" id="btn-url">Generator</button>
+            <button onclick="window.location.href='/viewer'" id="btn-viewer">QR Viewer</button>
+            <button onclick="window.location.href='/vcard-viewer'" id="btn-vcard-viewer">vCard Viewer</button>
+        </nav>
+
         <div style="display: flex; gap: 10px; margin-bottom: 20px; justify-content: center;">
-            <button onclick="toggleType('url')" id="btn-url" style="padding: 10px 20px; font-size: 14px;">URL</button>
-            <button onclick="toggleType('vcard')" id="btn-vcard" style="padding: 10px 20px; font-size: 14px; background: #f1f5f9; color: var(--text);">vCard</button>
-            <button onclick="window.location.href='/viewer'" style="padding: 10px 20px; font-size: 14px; background: #f1f5f9; color: var(--text);">QR Viewer</button>
-            <button onclick="window.location.href='/vcard-viewer'" style="padding: 10px 20px; font-size: 14px; background: #f1f5f9; color: var(--text);">vCard Viewer</button>
+            <button onclick="toggleType('url')" id="type-url" class="type-btn active">URL</button>
+            <button onclick="toggleType('vcard')" id="type-vcard" class="type-btn">vCard</button>
         </div>
 
         <form action="/generate" method="POST" enctype="multipart/form-data" id="qr-form">
@@ -100,8 +104,8 @@
                 const urlFields = document.getElementById('url-fields');
                 const vcardFields = document.getElementById('vcard-fields');
                 const urlInput = document.getElementById('url-input');
-                const btnUrl = document.getElementById('btn-url');
-                const btnVcard = document.getElementById('btn-vcard');
+                const btnUrl = document.getElementById('type-url');
+                const btnVcard = document.getElementById('type-vcard');
                 const submitBtn = document.getElementById('submit-btn');
                 const qrOptions = document.getElementById('qr-options');
 
@@ -110,20 +114,16 @@
                     vcardFields.style.display = 'none';
                     qrOptions.style.display = 'grid';
                     urlInput.required = true;
-                    btnUrl.style.background = 'var(--primary)';
-                    btnUrl.style.color = 'white';
-                    btnVcard.style.background = '#f1f5f9';
-                    btnVcard.style.color = 'var(--text)';
+                    btnUrl.classList.add('active');
+                    btnVcard.classList.remove('active');
                     submitBtn.textContent = 'Generate Magic QR';
                 } else {
                     urlFields.style.display = 'none';
                     vcardFields.style.display = 'block';
                     qrOptions.style.display = 'none';
                     urlInput.required = false;
-                    btnVcard.style.background = 'var(--primary)';
-                    btnVcard.style.color = 'white';
-                    btnUrl.style.background = '#f1f5f9';
-                    btnUrl.style.color = 'var(--text)';
+                    btnVcard.classList.add('active');
+                    btnUrl.classList.remove('active');
                     submitBtn.textContent = 'Generate vCard';
                 }
             }
