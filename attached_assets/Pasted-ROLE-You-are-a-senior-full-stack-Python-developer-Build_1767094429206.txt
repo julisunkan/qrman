@@ -1,0 +1,164 @@
+ROLE:
+You are a senior full-stack Python developer. Build a complete, production-ready Flask web application.
+
+APP NAME:
+Custom QR Code Generator with Branding, Analytics, and Tracking
+
+CORE REQUIREMENTS:
+Build a Flask web app that allows users to:
+1. Generate custom QR codes
+2. Apply brand colors
+3. Embed a logo in the center
+4. Download QR codes as:
+   - PNG
+   - SVG
+   - Animated GIF (animated QR codes)
+5. Track QR scans with analytics
+6. View a dashboard with charts
+7. Create expiring QR codes
+
+TECH STACK (MANDATORY):
+- Backend: Python + Flask
+- Frontend: HTML + CSS + minimal JavaScript
+- Charts: Chart.js
+- Database: SQLite ONLY
+  - Use Python built-in sqlite3
+  - No PostgreSQL, MySQL, or external databases
+- QR generation:
+  - qrcode + Pillow → PNG + GIF
+  - segno → SVG
+- Geo detection: geoip2 (GeoLite2)
+- Must run fully inside Replit
+- No paid APIs
+
+PROJECT STRUCTURE (STRICT):
+/
+├── app.py
+├── qr_utils.py
+├── models.sql
+├── database.db
+├── static/
+│   ├── qr_codes/
+│   └── css/
+├── templates/
+│   ├── index.html
+│   ├── dashboard.html
+│   └── expired.html
+└── requirements.txt
+
+DATABASE DESIGN (SQLite):
+
+All data must be stored in a local SQLite database (database.db).
+
+TABLE: links
+- code TEXT PRIMARY KEY
+- target_url TEXT
+- created_at DATETIME
+- expires_at DATETIME (nullable)
+- total_scans INTEGER
+
+TABLE: scans
+- id INTEGER PRIMARY KEY AUTOINCREMENT
+- link_code TEXT
+- timestamp DATETIME
+- country TEXT
+- device TEXT
+- ip TEXT
+
+Database schema must be defined in models.sql and initialized automatically if missing.
+
+QR TRACKING LOGIC (CRITICAL):
+QR codes must NOT link directly to the destination URL.
+
+Instead:
+QR → /r/<code> → log scan → redirect to real URL
+
+On each scan:
+1. Log scan data into scans table
+2. Increment total_scans in links table
+3. Check expiration
+4. Redirect if valid
+
+SCAN METADATA DETECTION:
+
+DEVICE:
+- Parse User-Agent
+- Classify as Mobile, Desktop, or Tablet
+
+COUNTRY:
+- Use GeoLite2 via geoip2
+- Use X-Forwarded-For if available, else request.remote_addr
+- Fallback to "Unknown" if detection fails
+
+DASHBOARD REQUIREMENTS (/dashboard/<code>):
+Dashboard must display:
+1. Line chart – scans per day
+2. Pie chart – device distribution
+3. Bar or pie chart – top countries
+4. Total scan count
+5. Expiration status and date
+
+Charts must use Chart.js only.
+
+QR CUSTOMIZATION:
+Users must be able to:
+- Choose foreground color
+- Choose background color
+- Upload a logo (PNG preferred)
+
+QR codes must:
+- Use high error correction
+- Remain scannable
+
+ANIMATED QR CODES (GIF):
+- Generate animated QR codes as GIFs
+- Animate colors or logo subtly
+- Maintain scan reliability
+- Allow user download
+
+EXPIRING QR CODES:
+- User sets expiration in days
+- Store expiration in SQLite
+- If expired:
+  - Block redirect
+  - Show expired.html
+- Dashboard must show expiration info
+
+UX REQUIREMENTS:
+- Clean, simple UI
+- Mobile-friendly
+- No authentication required
+- QR preview before download
+- Clear download buttons (PNG / SVG / GIF)
+
+CONSTRAINTS:
+- DO NOT use Django
+- DO NOT use React
+- DO NOT use external databases
+- DO NOT require user accounts
+- SQLite must be the only database
+- Code must be well-commented and readable
+
+OUTPUT EXPECTATIONS:
+Generate:
+1. requirements.txt
+2. models.sql
+3. app.py (Flask logic)
+4. SQLite initialization logic
+5. qr_utils.py (QR generation)
+6. HTML templates
+7. Clear comments explaining logic
+
+The app must run immediately on Replit without extra configuration.
+
+BONUS (OPTIONAL):
+- SVG / PNG toggle
+- QR regeneration without losing analytics
+- Graceful error handling
+
+START ORDER:
+1. requirements.txt
+2. models.sql
+3. app.py
+4. templates
+5. qr_utils.py

@@ -1,0 +1,13 @@
+body { font-family: sans-serif; background: #f4f4f9; color: #333; margin: 0; padding: 20px; }
+.container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+h1 { color: #2c3e50; text-align: center; }
+form { display: flex; flex-direction: column; gap: 15px; }
+input[type="url"], input[type="number"], button { padding: 12px; border: 1px solid #ddd; border-radius: 4px; }
+button { background: #3498db; color: white; border: none; cursor: pointer; font-size: 16px; }
+button:hover { background: #2980b9; }
+.options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.qr-preview { text-align: center; margin-top: 20px; }
+.downloads { display: flex; justify-content: center; gap: 10px; margin-top: 10px; }
+.downloads a { text-decoration: none; padding: 8px 15px; background: #2ecc71; color: white; border-radius: 4px; font-size: 14px; }
+.charts { display: flex; flex-direction: column; gap: 30px; margin-top: 30px; }
+canvas { max-height: 300px; }

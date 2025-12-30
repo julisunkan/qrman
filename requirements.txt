@@ -1,0 +1,13 @@
+flask
+qrcode
+pillow
+segno
+geoip2
+user-agents
+pytz
+flask
+geoip2
+pytz
+qrcode[pillow]
+segno
+user-agents
