@@ -138,6 +138,10 @@ def dashboard(code):
 def viewer():
     return render_template('viewer.html')
 
+@app.route('/vcard-viewer')
+def vcard_viewer():
+    return render_template('vcard_viewer.html')
+
 if __name__ == '__main__':
     init_db()
     app.run(host='0.0.0.0', port=5000)

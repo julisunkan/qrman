@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>vCard Viewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>vCard Viewer</h1>
+        <p style="text-align: center; color: #64748b; margin-bottom: 30px;">Upload a .vcf file to view contact details</p>
+        
+        <div style="background: #f1f5f9; padding: 30px; border-radius: 20px; text-align: center; border: 2px dashed #e2e8f0;">
+            <input type="file" id="vcf-upload" accept=".vcf,text/vcard" style="display: none;">
+            <button onclick="document.getElementById('vcf-upload').click()" style="margin-bottom: 20px;">Choose vCard File</button>
+        </div>
+
+        <div id="result-container" style="display: none; margin-top: 30px; background: white; padding: 25px; border-radius: 16px; border: 1px solid #e2e8f0; animation: popIn 0.5s ease;">
+            <h3 style="margin: 0 0 15px; color: var(--primary);">Contact Details</h3>
+            <div id="vcard-info" style="padding: 15px; background: #f0fdf4; border-radius: 10px; border: 1px solid #bbf7d0; font-size: 14px; line-height: 1.6;"></div>
+            
+            <h4 style="margin: 20px 0 10px; color: #64748b; font-size: 12px; text-transform: uppercase;">Raw Data</h4>
+            <pre id="raw-data" style="padding: 15px; background: #f8fafc; border-radius: 10px; font-family: monospace; font-size: 12px; overflow-x: auto; border: 1px solid #e2e8f0;"></pre>
+        </div>
+
+        <div style="margin-top: 30px; text-align: center;">
+            <a href="/" style="color: var(--primary); text-decoration: none; font-weight: 600;">← Back to Generator</a>
+        </div>
+    </div>
+
+    <script>
+        const upload = document.getElementById('vcf-upload');
+        const resultContainer = document.getElementById('result-container');
+        const vcardInfo = document.getElementById('vcard-info');
+        const rawData = document.getElementById('raw-data');
+
+        upload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const content = event.target.result;
+                rawData.textContent = content;
+                
+                const lines = content.split(/\r?\n/);
+                let formattedInfo = '';
+                
+                lines.forEach(line => {
+                    if (line.startsWith('FN:')) formattedInfo += '<strong>Name:</strong> ' + line.substring(3).trim() + '<br>';
+                    if (line.startsWith('N:') && !formattedInfo.includes('Name:')) {
+                        const parts = line.substring(2).split(';');
+                        const name = parts.filter(p => p).reverse().join(' ').trim();
+                        if (name) formattedInfo += '<strong>Name:</strong> ' + name + '<br>';
+                    }
+                    if (line.startsWith('TEL')) {
+                        const parts = line.split(':');
+                        if (parts.length > 1) formattedInfo += '<strong>Phone:</strong> ' + parts[1].trim() + '<br>';
+                    }
+                    if (line.startsWith('EMAIL')) {
+                        const parts = line.split(':');
+                        if (parts.length > 1) formattedInfo += '<strong>Email:</strong> ' + parts[1].trim() + '<br>';
+                    }
+                    if (line.startsWith('ORG:')) formattedInfo += '<strong>Organization:</strong> ' + line.substring(4).trim() + '<br>';
+                    if (line.startsWith('ADR:')) {
+                        const addr = line.substring(4).split(';').filter(p => p.trim()).join(', ');
+                        if (addr) formattedInfo += '<strong>Address:</strong> ' + addr + '<br>';
+                    }
+                    if (line.startsWith('TITLE:')) formattedInfo += '<strong>Title:</strong> ' + line.substring(6).trim() + '<br>';
+                    if (line.startsWith('URL:')) formattedInfo += '<strong>Website:</strong> <a href="' + line.substring(4).trim() + '" target="_blank">' + line.substring(4).trim() + '</a><br>';
+                });
+
+                vcardInfo.innerHTML = formattedInfo || 'No standard contact fields found in this vCard.';
+                resultContainer.style.display = 'block';
+            };
+            reader.readAsText(file);
+        });
+    </script>
+</body>
+</html>
