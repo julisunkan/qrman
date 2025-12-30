@@ -10,23 +10,41 @@
     <div class="container">
         <h1>QR Dashboard</h1>
         <div class="qr-preview">
-            <img src="/static/qr_codes/{{ link.code }}.png" width="200">
+            <img src="/static/qr_codes/{{ link.code }}.png" width="200" style="border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);">
             <div class="downloads">
-                <a href="/static/qr_codes/{{ link.code }}.png" download>Download PNG</a>
-                <a href="/static/qr_codes/{{ link.code }}.svg" download>Download SVG</a>
-                <a href="/static/qr_codes/{{ link.code }}.gif" download>Download GIF</a>
+                <a href="/static/qr_codes/{{ link.code }}.png" download>PNG</a>
+                <a href="/static/qr_codes/{{ link.code }}.svg" download>SVG</a>
+                <a href="/static/qr_codes/{{ link.code }}.gif" download>GIF</a>
             </div>
         </div>
 
         <div class="stats">
-            <p>Total Scans: {{ link.total_scans }}</p>
-            <p>Expires: {{ link.expires_at or 'Never' }}</p>
+            <div class="stat-card">
+                <h3>{{ link.total_scans }}</h3>
+                <p>Total Scans</p>
+            </div>
+            <div class="stat-card">
+                <h3>{{ (link.expires_at or 'Never').split('T')[0] if link.expires_at else 'Never' }}</h3>
+                <p>Expiration</p>
+            </div>
         </div>
 
         <div class="charts">
-            <canvas id="dailyChart"></canvas>
-            <canvas id="deviceChart"></canvas>
-            <canvas id="countryChart"></canvas>
+            <div style="background: #f8fafc; padding: 20px; border-radius: 16px;">
+                <canvas id="dailyChart"></canvas>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div style="background: #f8fafc; padding: 20px; border-radius: 16px;">
+                    <canvas id="deviceChart"></canvas>
+                </div>
+                <div style="background: #f8fafc; padding: 20px; border-radius: 16px;">
+                    <canvas id="countryChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 30px; text-align: center;">
+            <a href="/" style="color: var(--primary); text-decoration: none; font-weight: 600;">← Create Another</a>
         </div>
     </div>
 

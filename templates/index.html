@@ -9,15 +9,23 @@
     <div class="container">
         <h1>Custom QR Generator</h1>
         <form action="/generate" method="POST" enctype="multipart/form-data">
-            <input type="url" name="url" placeholder="Enter URL (https://...)" required>
-            <div class="options">
-                <label>Foreground: <input type="color" name="fg_color" value="#000000"></label>
-                <label>Background: <input type="color" name="bg_color" value="#ffffff"></label>
-                <label>Expires (days): <input type="number" name="expiry_days" min="1"></label>
-                <label>Logo: <input type="file" name="logo" accept="image/png"></label>
+            <div class="input-group">
+                <input type="url" name="url" placeholder="Enter URL (https://...)" required>
             </div>
-            <button type="submit">Generate QR Code</button>
+            <div class="options">
+                <label>Foreground <input type="color" name="fg_color" value="#4f46e5"></label>
+                <label>Background <input type="color" name="bg_color" value="#ffffff"></label>
+                <label>Expires (days) <input type="number" name="expiry_days" min="1" placeholder="Optional"></label>
+                <label>Custom Logo <input type="file" name="logo" accept="image/png"></label>
+            </div>
+            <button type="submit">Generate Magic QR</button>
         </form>
+        
+        <div class="features-mini">
+            <div class="feature-slide" style="animation-delay: 0s;">✨ High Quality PNG & SVG</div>
+            <div class="feature-slide" style="animation-delay: 2s;">🌀 Animated GIF Support</div>
+            <div class="feature-slide" style="animation-delay: 4s;">📊 Real-time Scan Analytics</div>
+        </div>
     </div>
 </body>
 </html>
