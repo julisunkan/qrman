@@ -20,50 +20,56 @@
             <input type="hidden" name="type" id="qr-type" value="url">
             
             <div id="url-fields" class="input-group">
-                <input type="url" name="url" placeholder="Enter URL (https://...)" id="url-input" required>
+                <span class="field-section-label">Target Destination</span>
+                <input type="url" name="url" placeholder="Enter link URL (e.g. https://yourwebsite.com)" id="url-input" required>
             </div>
 
-            <div id="vcard-fields" class="input-group" style="display: none;">
-                <div style="grid-column: span 1;">
-                    <span class="field-section-label">Identity</span>
-                    <input type="text" name="first_name" placeholder="First Name">
-                </div>
-                <div style="grid-column: span 1;">
-                    <span class="field-section-label">&nbsp;</span>
-                    <input type="text" name="last_name" placeholder="Last Name">
-                </div>
-                
-                <div class="field-section">
-                    <span class="field-section-label">Contact Numbers</span>
-                    <div id="phone-container" style="display: flex; flex-direction: column; gap: 8px;">
-                        <div class="dynamic-input-group">
-                            <input type="tel" name="phone[]" placeholder="Mobile or Work Number">
-                            <button type="button" class="add-btn" onclick="addField('phone-container', 'phone[]', 'tel', 'Additional Number')">+</button>
+            <div id="vcard-fields" style="display: none;">
+                <div class="input-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div style="grid-column: span 1;">
+                        <span class="field-section-label">Identity</span>
+                        <input type="text" name="first_name" placeholder="First Name">
+                    </div>
+                    <div style="grid-column: span 1;">
+                        <span class="field-section-label">&nbsp;</span>
+                        <input type="text" name="last_name" placeholder="Last Name">
+                    </div>
+                    
+                    <div class="field-section">
+                        <span class="field-section-label">Contact Numbers</span>
+                        <div id="phone-container" style="display: flex; flex-direction: column; gap: 8px;">
+                            <div class="dynamic-input-group">
+                                <input type="tel" name="phone[]" placeholder="Mobile or Work Number">
+                                <button type="button" class="add-btn" onclick="addField('phone-container', 'phone[]', 'tel', 'Additional Number')">+</button>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="field-section">
-                    <span class="field-section-label">Email Addresses</span>
-                    <div id="email-container" style="display: flex; flex-direction: column; gap: 8px;">
-                        <div class="dynamic-input-group">
-                            <input type="email" name="email[]" placeholder="Primary Email">
-                            <button type="button" class="add-btn" onclick="addField('email-container', 'email[]', 'email', 'Additional Email')">+</button>
+                    <div class="field-section">
+                        <span class="field-section-label">Email Addresses</span>
+                        <div id="email-container" style="display: flex; flex-direction: column; gap: 8px;">
+                            <div class="dynamic-input-group">
+                                <input type="email" name="email[]" placeholder="Primary Email">
+                                <button type="button" class="add-btn" onclick="addField('email-container', 'email[]', 'email', 'Additional Email')">+</button>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="field-section">
-                    <span class="field-section-label">Professional Info</span>
-                    <input type="text" name="org" placeholder="Company / Organization Name">
+                    <div class="field-section">
+                        <span class="field-section-label">Professional Info</span>
+                        <input type="text" name="org" placeholder="Company / Organization Name">
+                    </div>
                 </div>
             </div>
 
             <div class="options" id="qr-options">
-                <label>Foreground <input type="color" name="fg_color" value="#4f46e5"></label>
-                <label>Background <input type="color" name="bg_color" value="#ffffff"></label>
-                <label>Expires (days) <input type="number" name="expiry_days" min="1" placeholder="Optional"></label>
-                <label>Custom Logo <input type="file" name="logo" accept="image/png"></label>
+                <div class="field-section" style="grid-column: span 2;">
+                    <span class="field-section-label">Appearance & Rules</span>
+                </div>
+                <label>Foreground Color <input type="color" name="fg_color" value="#4f46e5"></label>
+                <label>Background Color <input type="color" name="bg_color" value="#ffffff"></label>
+                <label>Expiry Schedule <input type="number" name="expiry_days" min="1" placeholder="Days until expiration"></label>
+                <label>Brand Logo (PNG) <input type="file" name="logo" accept="image/png"></label>
             </div>
             <button type="submit" id="submit-btn">Generate Magic QR</button>
         </form>
