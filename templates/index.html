@@ -8,10 +8,27 @@
 <body>
     <div class="container">
         <h1>Custom QR Generator</h1>
-        <form action="/generate" method="POST" enctype="multipart/form-data">
-            <div class="input-group">
-                <input type="url" name="url" placeholder="Enter URL (https://...)" required>
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 20px; justify-content: center;">
+            <button onclick="toggleType('url')" id="btn-url" style="padding: 10px 20px; font-size: 14px;">URL</button>
+            <button onclick="toggleType('vcard')" id="btn-vcard" style="padding: 10px 20px; font-size: 14px; background: #f1f5f9; color: var(--text);">vCard</button>
+        </div>
+
+        <form action="/generate" method="POST" enctype="multipart/form-data" id="qr-form">
+            <input type="hidden" name="type" id="qr-type" value="url">
+            
+            <div id="url-fields" class="input-group">
+                <input type="url" name="url" placeholder="Enter URL (https://...)" id="url-input" required>
             </div>
+
+            <div id="vcard-fields" class="input-group" style="display: none;">
+                <input type="text" name="first_name" placeholder="First Name">
+                <input type="text" name="last_name" placeholder="Last Name">
+                <input type="tel" name="phone" placeholder="Phone Number">
+                <input type="email" name="email" placeholder="Email Address">
+                <input type="text" name="org" placeholder="Organization">
+            </div>
+
             <div class="options">
                 <label>Foreground <input type="color" name="fg_color" value="#4f46e5"></label>
                 <label>Background <input type="color" name="bg_color" value="#ffffff"></label>
@@ -20,6 +37,35 @@
             </div>
             <button type="submit">Generate Magic QR</button>
         </form>
+
+        <script>
+            function toggleType(type) {
+                document.getElementById('qr-type').value = type;
+                const urlFields = document.getElementById('url-fields');
+                const vcardFields = document.getElementById('vcard-fields');
+                const urlInput = document.getElementById('url-input');
+                const btnUrl = document.getElementById('btn-url');
+                const btnVcard = document.getElementById('btn-vcard');
+
+                if (type === 'url') {
+                    urlFields.style.display = 'block';
+                    vcardFields.style.display = 'none';
+                    urlInput.required = true;
+                    btnUrl.style.background = 'var(--primary)';
+                    btnUrl.style.color = 'white';
+                    btnVcard.style.background = '#f1f5f9';
+                    btnVcard.style.color = 'var(--text)';
+                } else {
+                    urlFields.style.display = 'none';
+                    vcardFields.style.display = 'block';
+                    urlInput.required = false;
+                    btnVcard.style.background = 'var(--primary)';
+                    btnVcard.style.color = 'white';
+                    btnUrl.style.background = '#f1f5f9';
+                    btnUrl.style.color = 'var(--text)';
+                }
+            }
+        </script>
         
         <div class="features-mini">
             <div class="feature-slide" style="animation-delay: 0s;">✨ High Quality PNG & SVG</div>

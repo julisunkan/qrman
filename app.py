@@ -29,11 +29,22 @@ def index():
 
 @app.route('/generate', methods=['POST'])
 def generate():
-    target_url = request.form.get('url')
+    qr_type = request.form.get('type', 'url')
     fg_color = request.form.get('fg_color', '#000000')
     bg_color = request.form.get('bg_color', '#ffffff')
     expiry_days = request.form.get('expiry_days')
     logo = request.files.get('logo')
+
+    if qr_type == 'vcard':
+        fn = request.form.get('first_name', '')
+        ln = request.form.get('last_name', '')
+        tel = request.form.get('phone', '')
+        email = request.form.get('email', '')
+        org = request.form.get('org', '')
+        # Simple vCard 3.0 format
+        target_url = f"BEGIN:VCARD\nVERSION:3.0\nN:{ln};{fn};;;\nFN:{fn} {ln}\nORG:{org}\nTEL;TYPE=CELL:{tel}\nEMAIL:{email}\nEND:VCARD"
+    else:
+        target_url = request.form.get('url')
 
     code = str(uuid.uuid4())[:8]
     expires_at = None
@@ -48,6 +59,8 @@ def generate():
 
     # Generate QR codes
     domain = request.host_url.rstrip('/')
+    # If it's a vCard, we might want to link directly or use the redirector
+    # Using the redirector allows tracking, but the mobile device must handle the text as a vCard after redirect
     redirect_url = f"{domain}/r/{code}"
     
     logo_path = None
@@ -86,6 +99,12 @@ def redirect_to_url(code):
     conn.execute('UPDATE links SET total_scans = total_scans + 1 WHERE code = ?', (code,))
     conn.commit()
     conn.close()
+
+    # If target_url starts with BEGIN:VCARD, it's a vCard
+    if link['target_url'].startswith('BEGIN:VCARD'):
+        # For vCards, we return the text content with correct MIME type so phones pick it up
+        from flask import Response
+        return Response(link['target_url'], mimetype='text/vcard', headers={'Content-Disposition': f'attachment; filename={code}.vcf'})
 
     return redirect(link['target_url'])
 
