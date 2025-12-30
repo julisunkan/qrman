@@ -199,7 +199,35 @@ input[type="color"] {
     letter-spacing: 0.05em;
 }
 
-/* Slideshow-like feel for features */
+#vcard-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    background: #f1f5f9;
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+}
+
+#vcard-fields input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#vcard-fields input[name="org"], 
+#vcard-fields input[name="email"] {
+    grid-column: span 2;
+}
+
+@media (max-width: 480px) {
+    #vcard-fields {
+        grid-template-columns: 1fr;
+    }
+    #vcard-fields input[name="org"], 
+    #vcard-fields input[name="email"] {
+        grid-column: span 1;
+    }
+}
 .features-mini {
     margin-top: 40px;
     overflow: hidden;
